@@ -30,7 +30,8 @@ class AssetControllerTest extends TestCase
 
         $this->get(route('admin.assets.edit', $asset))
             ->assertOk()
-            ->assertSee('Aset warga');
+            ->assertSee('Aset warga')
+            ->assertSee(Storage::disk('public')->url($image), false);
     }
 
     public function test_admin_can_create_an_asset_with_a_generated_code_and_photo(): void
@@ -46,7 +47,7 @@ class AssetControllerTest extends TestCase
                 'total_stock' => 2,
                 'available_stock' => 2,
                 'condition' => 'baik',
-                'image' => UploadedFile::fake()->image('speaker.png'),
+                'image' => UploadedFile::fake()->image('speaker.png', 1200, 600),
             ])
             ->assertRedirect(route('admin.assets.index'));
 
@@ -59,7 +60,18 @@ class AssetControllerTest extends TestCase
             'total_stock' => 2,
             'available_stock' => 2,
         ]);
-        Storage::disk('public')->assertExists($asset->image);
+        $this->assertSame(true, str_starts_with($asset->image, 'data:image/jpeg;base64,'));
+        $imageContents = base64_decode(substr($asset->image, strlen('data:image/jpeg;base64,')));
+        $this->assertSame('image/jpeg', (new \finfo(FILEINFO_MIME_TYPE))->buffer($imageContents));
+        $decodedImage = imagecreatefromstring($imageContents);
+        $this->assertSame(800, imagesx($decodedImage));
+        $this->assertSame(400, imagesy($decodedImage));
+        imagedestroy($decodedImage);
+
+        $this->actingAs($this->createAdmin())
+            ->get(route('admin.assets.index'))
+            ->assertOk()
+            ->assertSee($asset->image, false);
     }
 
     public function test_stock_available_cannot_exceed_total_stock(): void
@@ -145,7 +157,7 @@ class AssetControllerTest extends TestCase
         $asset->refresh();
 
         Storage::disk('public')->assertMissing($oldImage);
-        Storage::disk('public')->assertExists($asset->image);
+        $this->assertSame(true, str_starts_with($asset->image, 'data:image/jpeg;base64,'));
     }
 
     public function test_deleting_an_asset_removes_its_photo(): void
@@ -161,6 +173,20 @@ class AssetControllerTest extends TestCase
 
         $this->assertDatabaseMissing('assets', ['id' => $asset->id]);
         Storage::disk('public')->assertMissing($image);
+    }
+
+    public function test_deleting_an_asset_with_a_base64_photo_does_not_access_file_storage(): void
+    {
+        $category = $this->createCategory();
+        $asset = $this->createAsset($category, [
+            'image' => 'data:image/jpeg;base64,'.base64_encode('compressed image'),
+        ]);
+
+        $this->actingAs($this->createAdmin())
+            ->delete(route('admin.assets.destroy', $asset))
+            ->assertRedirect(route('admin.assets.index'));
+
+        $this->assertDatabaseMissing('assets', ['id' => $asset->id]);
     }
 
     public function test_asset_filters_apply_category_condition_and_search(): void

@@ -19,8 +19,8 @@
                     <article class="rounded-3xl border border-take-line bg-white p-5 shadow-sm sm:p-6">
                         <div class="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
                             <div class="flex min-w-0 items-start gap-4">
-                                @if ($borrowing->asset->image)
-                                    <img src="{{ Storage::disk('public')->url($borrowing->asset->image) }}" alt="Foto {{ $borrowing->asset->name }}" class="size-16 shrink-0 rounded-2xl border border-stone-100 object-cover">
+                                @if ($borrowing->asset->imageUrl())
+                                    <img src="{{ $borrowing->asset->imageUrl() }}" alt="Foto {{ $borrowing->asset->name }}" class="size-16 shrink-0 rounded-2xl border border-stone-100 object-cover">
                                 @else
                                     <span class="grid size-16 shrink-0 place-items-center rounded-2xl bg-take-cream text-2xl text-take-olive" aria-hidden="true">▧</span>
                                 @endif

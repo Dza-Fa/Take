@@ -60,8 +60,8 @@
                                 <tr class="transition hover:bg-take-cream/40">
                                     <td class="px-5 py-4">
                                         <div class="flex items-center gap-3">
-                                            @if ($asset->image)
-                                                <img src="{{ Storage::disk('public')->url($asset->image) }}" alt="Foto {{ $asset->name }}" class="size-12 rounded-xl border border-stone-100 object-cover">
+                                            @if ($asset->imageUrl())
+                                                <img src="{{ $asset->imageUrl() }}" alt="Foto {{ $asset->name }}" class="size-12 rounded-xl border border-stone-100 object-cover">
                                             @else
                                                 <span class="grid size-12 place-items-center rounded-xl bg-take-cream text-xl text-take-olive" aria-hidden="true">▧</span>
                                             @endif

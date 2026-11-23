@@ -80,7 +80,7 @@ class AssetController extends Controller
             : $this->generateAssetCode();
 
         if ($image !== null) {
-            $attributes['image'] = $this->storeImage($image);
+            $attributes['image'] = $this->convertImageToBase64($image);
         }
 
         Asset::create($attributes);
@@ -110,12 +110,12 @@ class AssetController extends Controller
         $oldImage = $asset->image;
 
         if ($image !== null) {
-            $attributes['image'] = $this->storeImage($image);
+            $attributes['image'] = $this->convertImageToBase64($image);
         }
 
         $asset->update($attributes);
 
-        if ($image !== null && $oldImage !== null) {
+        if ($image !== null && $oldImage !== null && ! str_starts_with($oldImage, 'data:image/')) {
             $this->deleteImage($oldImage);
         }
 
@@ -128,7 +128,7 @@ class AssetController extends Controller
         $image = $asset->image;
         $asset->delete();
 
-        if ($image !== null) {
+        if ($image !== null && ! str_starts_with($image, 'data:image/')) {
             $this->deleteImage($image);
         }
 
@@ -158,21 +158,55 @@ class AssetController extends Controller
         return $code;
     }
 
-    private function storeImage(UploadedFile $image): string
-    {
-        $path = $image->storePublicly('assets', 'public');
-
-        if ($path === false) {
-            throw new RuntimeException('Foto aset gagal diunggah. Silakan coba kembali.');
-        }
-
-        return $path;
-    }
-
     private function deleteImage(string $path): void
     {
         if (! Storage::disk('public')->delete($path)) {
             throw new RuntimeException('Foto aset gagal dihapus dari penyimpanan.');
         }
+    }
+
+    private function convertImageToBase64(UploadedFile $file): string
+    {
+        $mime = $file->getMimeType() ?: 'application/octet-stream';
+        $raw = file_get_contents($file->getRealPath());
+
+        if ($raw === false) {
+            throw new RuntimeException('Foto aset gagal dibaca. Silakan pilih ulang file foto.');
+        }
+
+        if (function_exists('imagecreatefromstring')) {
+            $image = @imagecreatefromstring($raw);
+
+            if ($image !== false) {
+                $width = imagesx($image);
+                $height = imagesy($image);
+
+                if ($width > 800) {
+                    $newHeight = max(1, (int) round(($height / $width) * 800));
+                    $resizedImage = imagescale($image, 800, $newHeight);
+                    imagedestroy($image);
+
+                    if ($resizedImage === false) {
+                        throw new RuntimeException('Foto aset gagal diproses. Silakan coba file foto lain.');
+                    }
+
+                    $image = $resizedImage;
+                }
+
+                ob_start();
+                $encodedSuccessfully = imagejpeg($image, null, 75);
+                $compressedImage = ob_get_clean();
+                imagedestroy($image);
+
+                if (! $encodedSuccessfully || $compressedImage === false) {
+                    throw new RuntimeException('Foto aset gagal dikompresi. Silakan coba kembali.');
+                }
+
+                $raw = $compressedImage;
+                $mime = 'image/jpeg';
+            }
+        }
+
+        return 'data:'.$mime.';base64,'.base64_encode($raw);
     }
 }

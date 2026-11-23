@@ -65,9 +65,9 @@
                     </div>
                     <div class="sm:col-span-2">
                         <label for="image" class="mb-2 block text-sm font-semibold text-stone-700">Foto aset <span class="font-normal text-stone-400">(JPG, PNG, WEBP; maks. 5 MB)</span></label>
-                        @if ($asset->image)
+                        @if ($asset->imageUrl())
                             <div class="mb-3 flex items-center gap-4 rounded-xl bg-take-cream/70 p-3">
-                                <img src="{{ Storage::disk('public')->url($asset->image) }}" alt="Foto {{ $asset->name }}" class="size-16 rounded-lg object-cover">
+                                <img src="{{ $asset->imageUrl() }}" alt="Foto {{ $asset->name }}" class="size-16 rounded-lg object-cover">
                                 <span class="text-xs text-stone-500">Foto saat ini akan diganti jika Anda memilih foto baru.</span>
                             </div>
                         @endif
