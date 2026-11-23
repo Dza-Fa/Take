@@ -8,7 +8,12 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.9/dist/cdn.min.js"></script>
 </head>
-<body class="min-h-screen bg-take-cream font-sans text-take-ink antialiased">
+<body
+    class="min-h-screen bg-take-cream font-sans text-take-ink antialiased"
+    x-data="{ open: false, form: null, title: '', message: '' }"
+    @confirm-action.window="open = true; form = $event.detail.form; title = $event.detail.title; message = $event.detail.message"
+    @keydown.escape.window="open = false"
+>
     @auth
         <header class="sticky top-0 z-30 border-b border-take-line bg-take-cream/95 backdrop-blur" x-data="{ menuOpen: false }">
             <nav class="mx-auto flex max-w-7xl items-center justify-between gap-5 px-4 py-4 sm:px-6 lg:px-8" aria-label="Navigasi utama">
@@ -22,6 +27,11 @@
 
                 <div class="hidden items-center gap-2 md:flex">
                     @if (auth()->user()->isAdmin())
+                        <a href="{{ route('dashboard') }}" @class([
+                            'rounded-full px-4 py-2 text-sm font-semibold transition',
+                            'bg-white text-take-olive shadow-sm' => request()->routeIs('dashboard'),
+                            'text-stone-600 hover:bg-white/70 hover:text-take-ink' => ! request()->routeIs('dashboard'),
+                        ])>Dashboard</a>
                         <a href="{{ route('admin.assets.index') }}" @class([
                             'rounded-full px-4 py-2 text-sm font-semibold transition',
                             'bg-white text-take-olive shadow-sm' => request()->routeIs('admin.assets.*'),
@@ -79,6 +89,7 @@
             <div x-cloak x-show="menuOpen" x-transition class="border-t border-take-line px-4 pb-4 md:hidden">
                 <div class="mx-auto flex max-w-7xl flex-col gap-2 pt-3">
                     @if (auth()->user()->isAdmin())
+                        <a href="{{ route('dashboard') }}" class="rounded-xl px-4 py-3 text-sm font-semibold text-stone-700 hover:bg-white">Dashboard pengurus</a>
                         <a href="{{ route('admin.assets.index') }}" class="rounded-xl px-4 py-3 text-sm font-semibold text-stone-700 hover:bg-white">Kelola aset</a>
                         <a href="{{ route('admin.categories.index') }}" class="rounded-xl px-4 py-3 text-sm font-semibold text-stone-700 hover:bg-white">Kelola kategori</a>
                         <a href="{{ route('admin.borrowings.index') }}" class="rounded-xl px-4 py-3 text-sm font-semibold text-stone-700 hover:bg-white">Kelola peminjaman</a>
@@ -104,7 +115,12 @@
             x-data="{ visible: true }"
             x-init="setTimeout(() => visible = false, 5000)"
             x-show="visible"
-            x-transition.opacity.duration.200ms
+            x-transition:enter="transition ease-out duration-300"
+            x-transition:enter-start="translate-y-2 opacity-0"
+            x-transition:enter-end="translate-y-0 opacity-100"
+            x-transition:leave="transition ease-in duration-200"
+            x-transition:leave-start="translate-y-0 opacity-100"
+            x-transition:leave-end="translate-y-2 opacity-0"
             class="fixed right-4 top-4 z-50 w-[calc(100%-2rem)] max-w-md"
             role="status"
             aria-live="polite"
@@ -124,6 +140,32 @@
             @endif
         </div>
     @endif
+
+    <div x-cloak x-show="open" class="fixed inset-0 z-[60] grid place-items-center bg-stone-950/40 p-4 backdrop-blur-sm" @click.self="open = false">
+        <section
+            x-show="open"
+            x-transition:enter="transition ease-out duration-200"
+            x-transition:enter-start="translate-y-2 scale-95 opacity-0"
+            x-transition:enter-end="translate-y-0 scale-100 opacity-100"
+            x-transition:leave="transition ease-in duration-150"
+            x-transition:leave-start="translate-y-0 scale-100 opacity-100"
+            x-transition:leave-end="translate-y-2 scale-95 opacity-0"
+            class="w-full max-w-md rounded-3xl bg-white p-6 shadow-2xl"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="confirm-action-title"
+            aria-describedby="confirm-action-message"
+            @click.stop
+        >
+            <span class="grid size-12 place-items-center rounded-2xl bg-amber-50 text-xl text-amber-700" aria-hidden="true">!</span>
+            <h2 id="confirm-action-title" class="mt-4 text-xl font-semibold text-take-ink" x-text="title"></h2>
+            <p id="confirm-action-message" class="mt-2 text-sm leading-6 text-stone-600" x-text="message"></p>
+            <div class="mt-6 flex justify-end gap-3">
+                <button type="button" class="rounded-xl border border-stone-200 px-4 py-2.5 text-sm font-bold text-stone-600 transition hover:bg-stone-50" @click="open = false">Batal</button>
+                <button type="button" class="rounded-xl bg-take-olive px-4 py-2.5 text-sm font-bold text-white transition hover:bg-[#294231]" @click="form.submit(); open = false">Ya, lanjutkan</button>
+            </div>
+        </section>
+    </div>
 
     <main class="min-h-screen @auth flex flex-col @endauth">
         <div class="@auth flex-1 @endauth">

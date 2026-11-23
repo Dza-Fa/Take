@@ -88,7 +88,7 @@
                                     <td class="px-5 py-4">
                                         <div class="flex justify-end gap-2">
                                             <a href="{{ route('admin.assets.edit', $asset) }}" class="rounded-lg px-3 py-2 text-xs font-bold text-take-olive hover:bg-take-cream">Edit</a>
-                                            <form method="POST" action="{{ route('admin.assets.destroy', $asset) }}" onsubmit="return confirm('Hapus aset ini? Foto aset juga akan dihapus.');">
+                                            <form method="POST" action="{{ route('admin.assets.destroy', $asset) }}" @submit.prevent="$dispatch('confirm-action', { form: $el, title: 'Hapus aset?', message: 'Aset dan foto yang tersimpan akan dihapus. Tindakan ini tidak dapat dibatalkan.' })">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="rounded-lg px-3 py-2 text-xs font-bold text-rose-700 hover:bg-rose-50">Hapus</button>

@@ -43,7 +43,7 @@
                                     <td class="px-6 py-4">
                                         <div class="flex justify-end gap-2">
                                             <a href="{{ route('admin.categories.edit', $category) }}" class="rounded-lg px-3 py-2 text-xs font-bold text-take-olive hover:bg-take-cream">Edit</a>
-                                            <form method="POST" action="{{ route('admin.categories.destroy', $category) }}" onsubmit="return confirm('Hapus kategori ini? Kategori yang masih memiliki aset tidak dapat dihapus.');">
+                                            <form method="POST" action="{{ route('admin.categories.destroy', $category) }}" @submit.prevent="$dispatch('confirm-action', { form: $el, title: 'Hapus kategori?', message: 'Kategori yang masih memiliki aset tetap tidak dapat dihapus.' })">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="rounded-lg px-3 py-2 text-xs font-bold text-rose-700 hover:bg-rose-50">Hapus</button>

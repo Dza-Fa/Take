@@ -24,11 +24,17 @@ class BorrowingControllerTest extends TestCase
             'status' => 'pending',
             'return_date' => '2026-11-24',
         ]);
+        $earlierOverdue = $this->createBorrowing($asset, [
+            'booking_code' => 'TAKE-20261123-003',
+            'status' => 'borrowed',
+            'return_date' => '2026-11-20',
+        ]);
 
         $this->actingAs($admin)
             ->get(route('admin.borrowings.index', ['status' => 'all', 'overdue' => 1]))
             ->assertOk()
             ->assertSee($borrowed->booking_code)
+            ->assertSeeInOrder([$earlierOverdue->booking_code, $borrowed->booking_code])
             ->assertSee('Terlambat')
             ->assertDontSee($pending->booking_code);
 

@@ -42,13 +42,13 @@ class BorrowingController extends Controller
             $borrowingsQuery
                 ->whereIn('status', ['approved', 'borrowed'])
                 ->whereDate('return_date', '<', today());
+
+            $borrowingsQuery->orderBy('return_date')->orderBy('id');
+        } else {
+            $borrowingsQuery->orderByDesc('created_at')->orderByDesc('id');
         }
 
-        $borrowings = $borrowingsQuery
-            ->orderByDesc('created_at')
-            ->orderByDesc('id')
-            ->paginate(12)
-            ->withQueryString();
+        $borrowings = $borrowingsQuery->paginate(12)->withQueryString();
 
         return view('admin.borrowings.index', compact('borrowings', 'status', 'isOverdueFilter'));
     }

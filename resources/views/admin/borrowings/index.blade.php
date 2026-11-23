@@ -47,7 +47,7 @@
             @if ($borrowings->isNotEmpty())
                 <div class="divide-y divide-stone-100">
                     @foreach ($borrowings as $borrowing)
-                        <article @class([
+                        <article id="borrowing-{{ $borrowing->id }}" @class([
                             'p-5 sm:p-6',
                             'bg-rose-50/60' => $borrowing->isOverdue(),
                         ])>
@@ -105,18 +105,18 @@
                                     <a href="{{ route('admin.borrowings.receipt', $borrowing) }}" class="inline-flex items-center justify-center rounded-xl border border-take-line px-4 py-2.5 text-sm font-bold text-take-olive transition hover:border-take-olive hover:bg-take-cream/50">Kartu bukti pinjam</a>
 
                                     @if ($borrowing->status === 'pending')
-                                        <form method="POST" action="{{ route('admin.borrowings.approve', $borrowing) }}">
+                                        <form method="POST" action="{{ route('admin.borrowings.approve', $borrowing) }}" @submit.prevent="$dispatch('confirm-action', { form: $el, title: 'Setujui dan serahkan barang?', message: 'Persetujuan akan langsung mengurangi stok tersedia dan mengubah status transaksi menjadi sedang dipinjam.' })">
                                             @csrf
                                             <button type="submit" class="w-full rounded-xl bg-take-olive px-4 py-2.5 text-sm font-bold text-white transition hover:bg-[#294231]">Setujui & serahkan barang</button>
                                         </form>
-                                        <form method="POST" action="{{ route('admin.borrowings.reject', $borrowing) }}" class="space-y-2">
+                                        <form method="POST" action="{{ route('admin.borrowings.reject', $borrowing) }}" class="space-y-2" @submit.prevent="$dispatch('confirm-action', { form: $el, title: 'Tolak pengajuan?', message: 'Pastikan alasan penolakan sudah diisi. Pengajuan akan ditandai sebagai ditolak.' })">
                                             @csrf
                                             <label for="admin_note_{{ $borrowing->id }}" class="block text-xs font-bold text-stone-600">Alasan penolakan <span class="text-rose-700">*</span></label>
                                             <textarea id="admin_note_{{ $borrowing->id }}" name="admin_note" rows="2" required maxlength="2000" class="w-full rounded-xl border border-stone-200 px-3 py-2 text-sm outline-none focus:border-rose-500 focus:ring-4 focus:ring-rose-500/10" placeholder="Jelaskan alasan pengajuan ditolak">{{ old('admin_note') }}</textarea>
                                             <button type="submit" class="w-full rounded-xl border border-rose-200 px-4 py-2.5 text-sm font-bold text-rose-700 transition hover:bg-rose-50">Tolak pengajuan</button>
                                         </form>
                                     @elseif (in_array($borrowing->status, ['approved', 'borrowed'], true))
-                                        <form method="POST" action="{{ route('admin.borrowings.return', $borrowing) }}" class="space-y-2 rounded-2xl bg-take-cream/60 p-3">
+                                        <form method="POST" action="{{ route('admin.borrowings.return', $borrowing) }}" class="space-y-2 rounded-2xl bg-take-cream/60 p-3" @submit.prevent="$dispatch('confirm-action', { form: $el, title: 'Terima pengembalian?', message: 'Pastikan kondisi aset sudah dipilih. Stok tersedia akan ditambah sesuai jumlah barang yang kembali.' })">
                                             @csrf
                                             <label for="return_condition_{{ $borrowing->id }}" class="block text-xs font-bold text-stone-600">Kondisi aset saat kembali</label>
                                             <select id="return_condition_{{ $borrowing->id }}" name="return_condition" required class="w-full rounded-xl border border-stone-200 bg-white px-3 py-2 text-sm outline-none focus:border-take-olive focus:ring-4 focus:ring-take-olive/10">
