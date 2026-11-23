@@ -13,7 +13,7 @@ class BorrowingControllerTest extends TestCase
 {
     use LazilyRefreshDatabase;
 
-    public function test_valid_submission_creates_pending_borrowing_reserves_stock_and_generates_unique_codes(): void
+    public function test_valid_submission_creates_pending_borrowing_without_changing_stock_and_generates_unique_codes(): void
     {
         $this->travelTo('2026-11-23 09:00:00');
         $user = User::factory()->create(['role' => 'warga']);
@@ -39,7 +39,7 @@ class BorrowingControllerTest extends TestCase
             'quantity' => 2,
             'status' => 'pending',
         ]);
-        $this->assertSame(2, $asset->fresh()->available_stock);
+        $this->assertSame(4, $asset->fresh()->available_stock);
 
         $this->post(route('borrowings.store', $anotherAsset), $this->validPayload())
             ->assertRedirect(route('my-borrowings.index'));

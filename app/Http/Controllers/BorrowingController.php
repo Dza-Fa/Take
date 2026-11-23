@@ -49,16 +49,15 @@ class BorrowingController extends Controller
                         'return_date' => $request->validated('return_date'),
                         'purpose' => $request->validated('purpose'),
                         'status' => 'pending',
+                        'stock_reserved' => false,
                     ]);
-
-                    $lockedAsset->decrement('available_stock', $quantity);
 
                     return $borrowing;
                 });
             });
 
         return redirect()->route('my-borrowings.index')
-            ->with('success', "Pengajuan berhasil dikirim dengan kode {$borrowing->booking_code}. Stok telah dicadangkan sementara menunggu persetujuan admin.");
+            ->with('success', "Pengajuan berhasil dikirim dengan kode {$borrowing->booking_code}. Stok akan diperbarui setelah admin menyetujui dan menyerahkan barang.");
     }
 
     public function index(Request $request): View

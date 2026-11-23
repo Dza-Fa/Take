@@ -36,7 +36,7 @@
             <section class="h-fit rounded-3xl border border-take-line bg-white p-6 shadow-sm sm:p-8">
                 <p class="text-xs font-bold uppercase tracking-[0.18em] text-take-clay">Pengajuan pinjaman</p>
                 <h2 class="mt-2 text-2xl font-semibold">Atur jadwal peminjaman</h2>
-                <p class="mt-2 text-sm leading-6 text-stone-500">Pengajuan berstatus menunggu persetujuan. Jumlah yang diajukan akan dicadangkan dari stok tersedia.</p>
+                <p class="mt-2 text-sm leading-6 text-stone-500">Pengajuan menunggu persetujuan admin. Stok baru dikurangi setelah pengajuan disetujui dan barang diserahkan.</p>
 
                 @if ($asset->condition === 'rusak')
                     <div class="mt-6 rounded-2xl border border-rose-200 bg-rose-50 p-4 text-sm leading-6 text-rose-800">Aset ini sedang dalam kondisi rusak sehingga belum dapat dipinjam.</div>

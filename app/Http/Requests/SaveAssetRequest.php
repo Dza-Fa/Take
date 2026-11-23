@@ -42,14 +42,20 @@ class SaveAssetRequest extends FormRequest
                     return;
                 }
 
-                $reservedStock = $asset->borrowings()
-                    ->whereIn('status', ['pending', 'approved', 'borrowed'])
+                $borrowedStock = $asset->borrowings()
+                    ->where(function ($query): void {
+                        $query->whereIn('status', ['approved', 'borrowed'])
+                            ->orWhere(function ($pendingQuery): void {
+                                $pendingQuery->where('status', 'pending')
+                                    ->where('stock_reserved', true);
+                            });
+                    })
                     ->sum('quantity');
 
-                if ($this->integer('available_stock') + $reservedStock > $this->integer('total_stock')) {
+                if ($this->integer('available_stock') + $borrowedStock > $this->integer('total_stock')) {
                     $validator->errors()->add(
                         'total_stock',
-                        'Stok total harus mencakup stok tersedia, pengajuan yang dicadangkan, dan aset yang sedang dipinjam.'
+                        'Stok total harus mencakup stok tersedia dan aset yang sedang dipinjam.'
                     );
                 }
             },

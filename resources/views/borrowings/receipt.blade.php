@@ -5,7 +5,7 @@
 @section('content')
     <section class="mx-auto max-w-3xl px-4 py-8 sm:px-6 lg:px-8 lg:py-12">
         <div class="no-print mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <a href="{{ route('my-borrowings.index') }}" class="inline-flex items-center gap-2 text-sm font-semibold text-stone-500 transition hover:text-take-olive"><span aria-hidden="true">←</span> Kembali ke pinjaman saya</a>
+            <a href="{{ request()->routeIs('admin.borrowings.receipt') ? route('admin.borrowings.index') : route('my-borrowings.index') }}" class="inline-flex items-center gap-2 text-sm font-semibold text-stone-500 transition hover:text-take-olive"><span aria-hidden="true">←</span> Kembali ke daftar peminjaman</a>
             <button type="button" onclick="window.print()" class="inline-flex items-center justify-center gap-2 rounded-xl bg-take-olive px-5 py-3 text-sm font-bold text-white transition hover:bg-[#294231]">Cetak kartu <span aria-hidden="true">⎙</span></button>
         </div>
 
@@ -68,6 +68,21 @@
                     <p class="text-xs font-bold uppercase tracking-[0.16em] text-stone-400">Keperluan acara</p>
                     <p class="mt-2 text-sm leading-6 text-stone-700">{{ $borrowing->purpose }}</p>
                 </div>
+
+                @if ($borrowing->return_condition)
+                    <div class="rounded-2xl bg-take-cream/70 p-4">
+                        <p class="text-xs font-bold uppercase tracking-[0.16em] text-stone-400">Kondisi saat dikembalikan</p>
+                        <p class="mt-2 text-sm font-semibold text-stone-700">{{ ucfirst($borrowing->return_condition) }}@if ($borrowing->returned_at) · {{ $borrowing->returned_at->format('d/m/Y H:i') }}@endif</p>
+                        @if ($borrowing->admin_note)
+                            <p class="mt-2 text-sm leading-6 text-stone-600">{{ $borrowing->admin_note }}</p>
+                        @endif
+                    </div>
+                @elseif ($borrowing->admin_note)
+                    <div>
+                        <p class="text-xs font-bold uppercase tracking-[0.16em] text-stone-400">Catatan admin</p>
+                        <p class="mt-2 text-sm leading-6 text-stone-700">{{ $borrowing->admin_note }}</p>
+                    </div>
+                @endif
 
                 <p class="border-t border-stone-100 pt-5 text-xs leading-5 text-stone-400">Kartu ini merupakan bukti digital pengajuan peminjaman aset lingkungan. Status persetujuan mengikuti informasi terbaru pada halaman Pinjaman Saya.</p>
             </div>

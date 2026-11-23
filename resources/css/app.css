@@ -18,16 +18,33 @@
 }
 
 @media print {
+    @page {
+        margin: 14mm;
+    }
+
     body {
         background: #fff !important;
     }
 
+    header,
+    footer,
     .no-print {
         display: none !important;
+    }
+
+    main,
+    main > div {
+        min-height: 0 !important;
+        display: block !important;
     }
 
     .print-card {
         border: 0 !important;
         box-shadow: none !important;
+    }
+
+    .print-card > div:first-child {
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
     }
 }

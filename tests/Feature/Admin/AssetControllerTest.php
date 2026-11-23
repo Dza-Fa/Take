@@ -113,54 +113,13 @@ class AssetControllerTest extends TestCase
                 'condition' => 'baik',
             ])
             ->assertSessionHasErrors([
-                'total_stock' => 'Stok total harus mencakup stok tersedia, pengajuan yang dicadangkan, dan aset yang sedang dipinjam.',
+                'total_stock' => 'Stok total harus mencakup stok tersedia dan aset yang sedang dipinjam.',
             ]);
 
         $this->assertDatabaseHas('assets', [
             'id' => $asset->id,
             'total_stock' => 10,
             'available_stock' => 6,
-        ]);
-    }
-
-    public function test_total_stock_cannot_be_less_than_pending_reservations(): void
-    {
-        $category = $this->createCategory();
-        $asset = $this->createAsset($category, [
-            'total_stock' => 5,
-            'available_stock' => 2,
-        ]);
-        $user = User::factory()->create(['role' => 'warga']);
-
-        Borrowing::create([
-            'booking_code' => 'TAKE-20261123-902',
-            'user_id' => $user->id,
-            'asset_id' => $asset->id,
-            'quantity' => 3,
-            'borrow_date' => '2026-11-24',
-            'return_date' => '2026-11-25',
-            'purpose' => 'Rapat warga',
-            'status' => 'pending',
-        ]);
-
-        $this->actingAs($this->createAdmin())
-            ->from(route('admin.assets.edit', $asset))
-            ->put(route('admin.assets.update', $asset), [
-                'category_id' => $category->id,
-                'code' => $asset->code,
-                'name' => $asset->name,
-                'total_stock' => 4,
-                'available_stock' => 2,
-                'condition' => 'baik',
-            ])
-            ->assertSessionHasErrors([
-                'total_stock' => 'Stok total harus mencakup stok tersedia, pengajuan yang dicadangkan, dan aset yang sedang dipinjam.',
-            ]);
-
-        $this->assertDatabaseHas('assets', [
-            'id' => $asset->id,
-            'total_stock' => 5,
-            'available_stock' => 2,
         ]);
     }
 

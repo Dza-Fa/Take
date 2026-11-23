@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AssetController;
+use App\Http\Controllers\Admin\BorrowingController as AdminBorrowingController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BorrowingController;
@@ -55,6 +56,11 @@ Route::middleware(['auth', 'admin'])
     ->prefix('admin')
     ->name('admin.')
     ->group(function (): void {
+        Route::get('/borrowings', [AdminBorrowingController::class, 'index'])->name('borrowings.index');
+        Route::post('/borrowings/{borrowing}/approve', [AdminBorrowingController::class, 'approve'])->name('borrowings.approve');
+        Route::post('/borrowings/{borrowing}/reject', [AdminBorrowingController::class, 'reject'])->name('borrowings.reject');
+        Route::post('/borrowings/{borrowing}/return', [AdminBorrowingController::class, 'return'])->name('borrowings.return');
+        Route::get('/borrowings/{borrowing}/receipt', [AdminBorrowingController::class, 'receipt'])->name('borrowings.receipt');
         Route::resource('categories', CategoryController::class)->except(['show']);
         Route::resource('assets', AssetController::class)->except(['show']);
     });

@@ -32,6 +32,11 @@
                             'bg-white text-take-olive shadow-sm' => request()->routeIs('admin.categories.*'),
                             'text-stone-600 hover:bg-white/70 hover:text-take-ink' => ! request()->routeIs('admin.categories.*'),
                         ])>Kategori</a>
+                        <a href="{{ route('admin.borrowings.index') }}" @class([
+                            'rounded-full px-4 py-2 text-sm font-semibold transition',
+                            'bg-white text-take-olive shadow-sm' => request()->routeIs('admin.borrowings.*'),
+                            'text-stone-600 hover:bg-white/70 hover:text-take-ink' => ! request()->routeIs('admin.borrowings.*'),
+                        ])>Peminjaman</a>
                     @else
                         <a href="{{ route('dashboard') }}" @class([
                             'rounded-full px-4 py-2 text-sm font-semibold transition',
@@ -76,6 +81,7 @@
                     @if (auth()->user()->isAdmin())
                         <a href="{{ route('admin.assets.index') }}" class="rounded-xl px-4 py-3 text-sm font-semibold text-stone-700 hover:bg-white">Kelola aset</a>
                         <a href="{{ route('admin.categories.index') }}" class="rounded-xl px-4 py-3 text-sm font-semibold text-stone-700 hover:bg-white">Kelola kategori</a>
+                        <a href="{{ route('admin.borrowings.index') }}" class="rounded-xl px-4 py-3 text-sm font-semibold text-stone-700 hover:bg-white">Kelola peminjaman</a>
                     @else
                         <a href="{{ route('dashboard') }}" class="rounded-xl px-4 py-3 text-sm font-semibold text-stone-700 hover:bg-white">Beranda warga</a>
                         <a href="{{ route('catalog.index') }}" class="rounded-xl px-4 py-3 text-sm font-semibold text-stone-700 hover:bg-white">Katalog aset</a>

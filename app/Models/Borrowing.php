@@ -17,6 +17,7 @@ class Borrowing extends Model
         'returned_at',
         'purpose',
         'status',
+        'stock_reserved',
         'return_condition',
         'admin_note',
     ];
@@ -27,6 +28,7 @@ class Borrowing extends Model
             'borrow_date' => 'date',
             'return_date' => 'date',
             'returned_at' => 'datetime',
+            'stock_reserved' => 'boolean',
         ];
     }
 
