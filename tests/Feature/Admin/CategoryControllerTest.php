@@ -114,6 +114,9 @@ class CategoryControllerTest extends TestCase
             ->get(route('admin.categories.index'))
             ->assertOk()
             ->assertSee('&lt;script&gt;alert(1)&lt;/script&gt;', false)
-            ->assertDontSee('<script>alert(1)</script>', false);
+            ->assertDontSee('<script>alert(1)</script>', false)
+            ->assertSee('<svg', false)
+            ->assertDontSee('>tk</span>', false)
+            ->assertDontSee('box');
     }
 }

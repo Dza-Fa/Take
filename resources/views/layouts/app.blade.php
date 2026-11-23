@@ -18,7 +18,9 @@
         <header class="sticky top-0 z-30 border-b border-take-line bg-take-cream/95 backdrop-blur" x-data="{ menuOpen: false }">
             <nav class="mx-auto flex max-w-7xl items-center justify-between gap-5 px-4 py-4 sm:px-6 lg:px-8" aria-label="Navigasi utama">
                 <a href="{{ route('dashboard') }}" class="flex shrink-0 items-center gap-3" aria-label="Take, beranda">
-                    <span class="grid size-10 place-items-center rounded-2xl bg-take-olive text-sm font-bold tracking-tight text-white">tk</span>
+                    <span class="grid size-10 place-items-center rounded-2xl bg-take-olive text-white">
+                        <x-take-mark class="size-6" />
+                    </span>
                     <span>
                         <span class="block text-lg font-bold leading-none tracking-tight">Take</span>
                         <span class="mt-1 block text-[10px] font-semibold uppercase tracking-[0.2em] text-stone-500">Aset bersama</span>

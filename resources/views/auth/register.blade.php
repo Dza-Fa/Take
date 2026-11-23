@@ -9,7 +9,9 @@
             <div class="absolute -right-8 -top-4 size-64 rounded-full border border-white/10"></div>
             <div class="absolute -bottom-36 -left-20 size-96 rounded-full bg-white/5"></div>
             <a href="{{ route('register') }}" class="relative inline-flex items-center gap-3">
-                <span class="grid size-11 place-items-center rounded-2xl bg-white text-sm font-bold text-take-olive">tk</span>
+                <span class="grid size-11 place-items-center rounded-2xl bg-white text-take-olive">
+                    <x-take-mark class="size-6" />
+                </span>
                 <span class="text-xl font-bold tracking-tight">Take</span>
             </a>
             <div class="relative max-w-xl">
@@ -28,7 +30,9 @@
             <div class="w-full max-w-lg">
                 <div class="mb-8 lg:hidden">
                     <a href="{{ route('register') }}" class="inline-flex items-center gap-3">
-                        <span class="grid size-11 place-items-center rounded-2xl bg-take-olive text-sm font-bold text-white">tk</span>
+                        <span class="grid size-11 place-items-center rounded-2xl bg-take-olive text-white">
+                            <x-take-mark class="size-6" />
+                        </span>
                         <span class="text-xl font-bold tracking-tight">Take</span>
                     </a>
                 </div>

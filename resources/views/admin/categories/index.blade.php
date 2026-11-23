@@ -32,7 +32,6 @@
                                 <tr class="transition hover:bg-take-cream/40">
                                     <td class="px-6 py-4">
                                         <div class="flex items-center gap-3">
-                                            <span class="grid size-10 place-items-center rounded-xl bg-take-cream text-lg text-take-olive" aria-hidden="true">{{ $category->icon ?: '□' }}</span>
                                             <span class="font-semibold text-stone-800">{{ $category->name }}</span>
                                         </div>
                                     </td>

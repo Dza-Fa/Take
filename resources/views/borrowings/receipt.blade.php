@@ -16,7 +16,9 @@
                         <p class="text-xs font-bold uppercase tracking-[0.2em] text-lime-100/80">Take · Aset bersama</p>
                         <h1 class="mt-2 text-2xl font-semibold sm:text-3xl">Kartu Bukti Pinjam</h1>
                     </div>
-                    <span class="grid size-12 shrink-0 place-items-center rounded-2xl bg-white/10 text-sm font-bold tracking-tight">tk</span>
+                    <span class="grid size-12 shrink-0 place-items-center rounded-2xl bg-white/10 text-white">
+                        <x-take-mark class="size-7" />
+                    </span>
                 </div>
                 <div class="mt-6 flex flex-wrap items-center gap-2">
                     <span class="rounded-full bg-white/15 px-3 py-1.5 text-xs font-bold">{{ [
