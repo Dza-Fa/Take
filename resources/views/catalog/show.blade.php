@@ -52,16 +52,78 @@
                             @error('quantity')<p class="mt-2 text-sm text-rose-700">{{ $message }}</p>@enderror
                         </div>
 
-                        <div class="grid gap-4 sm:grid-cols-2">
+                        <div
+                            class="grid gap-4 sm:grid-cols-2"
+                            x-data="{
+                                holidays: [],
+                                loadingHolidays: false,
+                                holidayMessage: '',
+                                async loadHolidays() {
+                                    this.loadingHolidays = true;
+                                    this.holidayMessage = '';
+                                    const years = [...new Set(
+                                        [this.$refs.borrowDate.value, this.$refs.returnDate.value]
+                                            .filter(Boolean)
+                                            .map(date => Number(date.slice(0, 4)))
+                                    )];
+
+                                    try {
+                                        const responses = await Promise.all(years.map(async year => {
+                                            const response = await fetch('{{ route('api.holidays.index') }}?year=' + year, {
+                                                headers: { Accept: 'application/json' },
+                                            });
+                                            const payload = await response.json();
+
+                                            if (!response.ok || !payload.success) {
+                                                throw new Error(payload.message || 'Kalender libur belum dapat dimuat.');
+                                            }
+
+                                            return payload.data;
+                                        }));
+
+                                        this.holidays = responses.flatMap(result => result.holidays);
+                                        const fallback = responses.find(result => result.source === 'fallback');
+                                        this.holidayMessage = fallback?.message || '';
+                                    } catch {
+                                        this.holidayMessage = 'Kalender libur belum dapat dimuat. Anda tetap dapat memilih tanggal peminjaman.';
+                                    } finally {
+                                        this.loadingHolidays = false;
+                                    }
+                                },
+                                upcomingHolidays() {
+                                    const startDate = this.$refs.borrowDate.value;
+
+                                    return this.holidays
+                                        .filter(holiday => holiday.date >= startDate)
+                                        .slice(0, 5);
+                                },
+                            }"
+                            x-init="loadHolidays()"
+                        >
                             <div>
                                 <label for="borrow_date" class="mb-2 block text-sm font-semibold text-stone-700">Tanggal pinjam</label>
-                                <input id="borrow_date" name="borrow_date" type="date" min="{{ today()->toDateString() }}" value="{{ old('borrow_date', today()->toDateString()) }}" required class="w-full rounded-xl border border-stone-200 px-3 py-3 text-sm outline-none focus:border-take-olive focus:ring-4 focus:ring-take-olive/10">
+                                <input x-ref="borrowDate" id="borrow_date" name="borrow_date" type="date" min="{{ today()->toDateString() }}" value="{{ old('borrow_date', today()->toDateString()) }}" required class="w-full rounded-xl border border-stone-200 px-3 py-3 text-sm outline-none focus:border-take-olive focus:ring-4 focus:ring-take-olive/10" @change="loadHolidays()">
                                 @error('borrow_date')<p class="mt-2 text-sm text-rose-700">{{ $message }}</p>@enderror
                             </div>
                             <div>
                                 <label for="return_date" class="mb-2 block text-sm font-semibold text-stone-700">Tanggal kembali</label>
-                                <input id="return_date" name="return_date" type="date" min="{{ old('borrow_date', today()->toDateString()) }}" value="{{ old('return_date', old('borrow_date', today()->toDateString())) }}" required class="w-full rounded-xl border border-stone-200 px-3 py-3 text-sm outline-none focus:border-take-olive focus:ring-4 focus:ring-take-olive/10">
+                                <input x-ref="returnDate" id="return_date" name="return_date" type="date" min="{{ old('borrow_date', today()->toDateString()) }}" value="{{ old('return_date', old('borrow_date', today()->toDateString())) }}" required class="w-full rounded-xl border border-stone-200 px-3 py-3 text-sm outline-none focus:border-take-olive focus:ring-4 focus:ring-take-olive/10" @change="loadHolidays()">
                                 @error('return_date')<p class="mt-2 text-sm text-rose-700">{{ $message }}</p>@enderror
+                            </div>
+                            <div class="rounded-xl bg-take-cream/60 p-4 sm:col-span-2" aria-live="polite">
+                                <div class="flex items-center justify-between gap-3">
+                                    <p class="text-sm font-semibold text-stone-700">Libur nasional pada tahun pilihan</p>
+                                    <span x-show="loadingHolidays" class="text-xs text-stone-500">Memuat...</span>
+                                </div>
+                                <p x-cloak x-show="holidayMessage" x-text="holidayMessage" class="mt-2 text-xs leading-5 text-amber-800"></p>
+                                <template x-if="!loadingHolidays && !holidayMessage && upcomingHolidays().length > 0">
+                                    <ul class="mt-2 grid gap-1 sm:grid-cols-2">
+                                        <template x-for="holiday in upcomingHolidays()" :key="holiday.date">
+                                            <li class="text-xs text-stone-600"><span class="font-semibold" x-text="holiday.date"></span> · <span x-text="holiday.name"></span></li>
+                                        </template>
+                                    </ul>
+                                </template>
+                                <p x-cloak x-show="!loadingHolidays && !holidayMessage && upcomingHolidays().length === 0" class="mt-2 text-xs text-stone-500">Tidak ada libur nasional mendatang di tahun tanggal pinjam yang dipilih.</p>
                             </div>
                         </div>
 

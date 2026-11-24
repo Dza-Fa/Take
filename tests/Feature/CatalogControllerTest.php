@@ -85,7 +85,24 @@ class CatalogControllerTest extends TestCase
             ->assertSee('Tanggal pinjam')
             ->assertSee('Tanggal kembali')
             ->assertSee('Keperluan acara')
+            ->assertSee(route('api.holidays.index'), false)
+            ->assertSee('Libur nasional pada tahun pilihan')
             ->assertSee('2026-11-23');
+    }
+
+    public function test_catalog_exposes_api_search_and_borrowing_status_widgets_with_server_fallback(): void
+    {
+        $category = $this->createCategory();
+        $this->createAsset($category, ['name' => 'Kursi warga']);
+
+        $this->actingAs(User::factory()->create(['role' => 'warga']))
+            ->get(route('catalog.index'))
+            ->assertOk()
+            ->assertSee(route('api.assets.index'), false)
+            ->assertSee(url('/api/borrowings'), false)
+            ->assertSee('Cek status peminjaman')
+            ->assertSee('action="'.route('catalog.index').'"', false)
+            ->assertSee('Kursi warga');
     }
 
     public function test_guest_is_redirected_to_login_from_catalog(): void
