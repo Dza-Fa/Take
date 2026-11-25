@@ -32,14 +32,30 @@ class Asset extends Model
 
     public function imageUrl(): ?string
     {
-        if ($this->image === null) {
+        if (blank($this->image)) {
             return null;
         }
 
-        if (str_starts_with($this->image, 'data:image/') || str_starts_with($this->image, 'http://') || str_starts_with($this->image, 'https://')) {
+        if (str_starts_with($this->image, 'data:image/')
+            || str_starts_with($this->image, 'http://')
+            || str_starts_with($this->image, 'https://')) {
             return $this->image;
         }
 
-        return Storage::disk('public')->url($this->image);
+        if (! self::isPublicImagePath($this->image) || ! Storage::disk('public')->exists($this->image)) {
+            return null;
+        }
+
+        return route('storage-file.show', ['path' => $this->image], false);
+    }
+
+    public function getImageUrlAttribute(): ?string
+    {
+        return $this->imageUrl();
+    }
+
+    public static function isPublicImagePath(string $path): bool
+    {
+        return preg_match('/\Aassets\/[A-Za-z0-9][A-Za-z0-9._-]*\z/', $path) === 1;
     }
 }

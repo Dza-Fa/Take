@@ -5,6 +5,8 @@ namespace Tests\Feature\Api;
 use App\Models\Asset;
 use App\Models\Category;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class AssetApiControllerTest extends TestCase
@@ -98,6 +100,17 @@ class AssetApiControllerTest extends TestCase
                 'message' => 'Aset tidak ditemukan.',
                 'data' => null,
             ]);
+    }
+
+    public function test_asset_api_uses_storage_file_url_for_uploaded_images(): void
+    {
+        Storage::fake('public');
+        $image = UploadedFile::fake()->image('asset.png')->store('assets', 'public');
+        $asset = $this->createAsset($this->createCategory(), ['image' => $image]);
+
+        $this->getJson(route('api.assets.show', $asset->code))
+            ->assertOk()
+            ->assertJsonPath('data.image', route('storage-file.show', ['path' => $image], false));
     }
 
     public function test_returns_422_when_asset_search_query_is_invalid(): void

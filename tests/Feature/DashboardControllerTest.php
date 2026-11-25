@@ -127,6 +127,22 @@ class DashboardControllerTest extends TestCase
             ->assertSee('Tidak ada pinjaman terlambat');
     }
 
+    public function test_admin_dashboard_orders_assets_by_fraction_of_stock_available(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+        $this->createAsset(['name' => 'Stok rendah', 'total_stock' => 10, 'available_stock' => 1]);
+        $this->createAsset(['name' => 'Stok sedang', 'total_stock' => 10, 'available_stock' => 5]);
+        $this->createAsset(['name' => 'Stok tinggi', 'total_stock' => 4, 'available_stock' => 3]);
+
+        $response = $this->actingAs($admin)->get(route('dashboard'));
+
+        $response->assertOk();
+        $this->assertSame(
+            ['Stok rendah', 'Stok sedang', 'Stok tinggi'],
+            $response->viewData('assetStockProgress')->pluck('name')->all(),
+        );
+    }
+
     public function test_guest_is_redirected_to_login_from_dashboard(): void
     {
         $this->get(route('dashboard'))

@@ -122,7 +122,7 @@ class AssetApiController extends Controller
             'total_stock' => $asset->total_stock,
             'available_stock' => $asset->available_stock,
             'condition' => $asset->condition,
-            'image' => $asset->imageUrl(),
+            'image' => $asset->image_url,
             'category' => [
                 'id' => $asset->category->id,
                 'name' => $asset->category->name,

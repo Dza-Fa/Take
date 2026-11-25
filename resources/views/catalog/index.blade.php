@@ -254,8 +254,8 @@
             <div class="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
                 @foreach ($assets as $asset)
                     <article class="overflow-hidden rounded-none border border-take-line bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg">
-                        @if ($asset->imageUrl())
-                            <img src="{{ $asset->imageUrl() }}" alt="Foto {{ $asset->name }}" class="h-52 w-full bg-stone-100 object-cover">
+                        @if ($asset->image_url)
+                            <img src="{{ $asset->image_url }}" alt="Foto {{ $asset->name }}" class="h-52 w-full rounded-none bg-stone-100 object-cover">
                         @else
                             <div class="grid h-52 place-items-center bg-gradient-to-br from-take-cream to-[#eee7d8]" aria-label="Foto belum tersedia">
                                 <div class="grid size-20 place-items-center rounded-none border border-white/80 bg-white/70 text-4xl text-take-olive shadow-sm" aria-hidden="true">▧</div>

@@ -65,11 +65,13 @@
                     </div>
                     <div class="sm:col-span-2">
                         <label for="image" class="mb-2 block text-sm font-semibold text-stone-700">Foto aset <span class="font-normal text-stone-400">(JPG, PNG, WEBP; maks. 5 MB)</span></label>
-                        @if ($asset->imageUrl())
+                        @if ($asset->image_url)
                             <div class="mb-3 flex items-center gap-4 rounded-none bg-take-cream/70 p-3">
-                                <img src="{{ $asset->imageUrl() }}" alt="Foto {{ $asset->name }}" class="size-16 rounded-none object-cover">
+                                <img src="{{ $asset->image_url }}" alt="Foto {{ $asset->name }}" class="size-16 rounded-none object-cover">
                                 <span class="text-xs text-stone-500">Foto saat ini akan diganti jika Anda memilih foto baru.</span>
                             </div>
+                        @else
+                            <div class="mb-3 grid size-16 place-items-center rounded-none bg-take-cream text-2xl text-take-olive" aria-hidden="true">▧</div>
                         @endif
                         <input id="image" name="image" type="file" accept=".jpg,.jpeg,.png,.webp" class="block w-full rounded-none border border-stone-200 bg-white text-sm text-stone-600 file:mr-4 file:border-0 file:bg-take-cream file:px-4 file:py-3 file:text-sm file:font-semibold file:text-take-olive hover:file:bg-take-olive/10">
                         @error('image')<p class="mt-2 text-sm text-rose-700">{{ $message }}</p>@enderror

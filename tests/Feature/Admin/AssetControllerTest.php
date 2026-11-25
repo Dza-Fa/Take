@@ -31,7 +31,7 @@ class AssetControllerTest extends TestCase
         $this->get(route('admin.assets.edit', $asset))
             ->assertOk()
             ->assertSee('Aset warga')
-            ->assertSee(Storage::disk('public')->url($image), false);
+            ->assertSee($asset->image_url, false);
     }
 
     public function test_admin_can_create_an_asset_with_a_generated_code_and_photo(): void
@@ -60,18 +60,15 @@ class AssetControllerTest extends TestCase
             'total_stock' => 2,
             'available_stock' => 2,
         ]);
-        $this->assertSame(true, str_starts_with($asset->image, 'data:image/jpeg;base64,'));
-        $imageContents = base64_decode(substr($asset->image, strlen('data:image/jpeg;base64,')));
-        $this->assertSame('image/jpeg', (new \finfo(FILEINFO_MIME_TYPE))->buffer($imageContents));
-        $decodedImage = imagecreatefromstring($imageContents);
-        $this->assertSame(800, imagesx($decodedImage));
-        $this->assertSame(400, imagesy($decodedImage));
-        imagedestroy($decodedImage);
+        $this->assertStringStartsWith('assets/', $asset->image);
+        Storage::disk('public')->assertExists($asset->image);
+        $this->assertSame('image/png', Storage::disk('public')->mimeType($asset->image));
+        $this->assertStringStartsWith('/storage-file/assets/', $asset->image_url);
 
         $this->actingAs($this->createAdmin())
             ->get(route('admin.assets.index'))
             ->assertOk()
-            ->assertSee($asset->image, false);
+            ->assertSee($asset->image_url, false);
     }
 
     public function test_stock_available_cannot_exceed_total_stock(): void
@@ -157,7 +154,8 @@ class AssetControllerTest extends TestCase
         $asset->refresh();
 
         Storage::disk('public')->assertMissing($oldImage);
-        $this->assertSame(true, str_starts_with($asset->image, 'data:image/jpeg;base64,'));
+        $this->assertStringStartsWith('assets/', $asset->image);
+        Storage::disk('public')->assertExists($asset->image);
     }
 
     public function test_deleting_an_asset_removes_its_photo(): void
@@ -187,6 +185,33 @@ class AssetControllerTest extends TestCase
             ->assertRedirect(route('admin.assets.index'));
 
         $this->assertDatabaseMissing('assets', ['id' => $asset->id]);
+    }
+
+    public function test_public_storage_file_route_streams_asset_images_without_a_storage_symlink(): void
+    {
+        Storage::fake('public');
+        $image = UploadedFile::fake()->image('asset.png')->store('assets', 'public');
+
+        $this->get(route('storage-file.show', ['path' => $image]))
+            ->assertOk()
+            ->assertHeader('Content-Type', 'image/png')
+            ->assertHeaderContains('Cache-Control', 'public')
+            ->assertHeaderContains('Cache-Control', 'max-age=86400')
+            ->assertHeader('X-Content-Type-Options', 'nosniff')
+            ->assertStreamedContent(Storage::disk('public')->get($image));
+    }
+
+    public function test_public_storage_file_route_rejects_paths_outside_assets_and_non_images(): void
+    {
+        Storage::fake('public');
+        Storage::disk('public')->put('private.png', 'private image');
+        Storage::disk('public')->put('assets/readme.txt', 'not an image');
+
+        $this->get('/storage-file/assets%2F..%2Fprivate.png')
+            ->assertNotFound();
+
+        $this->get(route('storage-file.show', ['path' => 'assets/readme.txt']))
+            ->assertNotFound();
     }
 
     public function test_asset_filters_apply_category_condition_and_search(): void

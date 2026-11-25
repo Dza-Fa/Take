@@ -15,6 +15,7 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 use RuntimeException;
+use Throwable;
 
 class AssetController extends Controller
 {
@@ -80,10 +81,18 @@ class AssetController extends Controller
             : $this->generateAssetCode();
 
         if ($image !== null) {
-            $attributes['image'] = $this->convertImageToBase64($image);
+            $attributes['image'] = $this->storeImage($image);
         }
 
-        Asset::create($attributes);
+        try {
+            Asset::create($attributes);
+        } catch (Throwable $exception) {
+            if (isset($attributes['image'])) {
+                $this->deleteImage($attributes['image']);
+            }
+
+            throw $exception;
+        }
 
         return redirect()->route('admin.assets.index')
             ->with('success', 'Aset berhasil ditambahkan.');
@@ -110,12 +119,20 @@ class AssetController extends Controller
         $oldImage = $asset->image;
 
         if ($image !== null) {
-            $attributes['image'] = $this->convertImageToBase64($image);
+            $attributes['image'] = $this->storeImage($image);
         }
 
-        $asset->update($attributes);
+        try {
+            $asset->update($attributes);
+        } catch (Throwable $exception) {
+            if (isset($attributes['image'])) {
+                $this->deleteImage($attributes['image']);
+            }
 
-        if ($image !== null && $oldImage !== null && ! str_starts_with($oldImage, 'data:image/')) {
+            throw $exception;
+        }
+
+        if ($image !== null && $oldImage !== null) {
             $this->deleteImage($oldImage);
         }
 
@@ -128,7 +145,7 @@ class AssetController extends Controller
         $image = $asset->image;
         $asset->delete();
 
-        if ($image !== null && ! str_starts_with($image, 'data:image/')) {
+        if ($image !== null) {
             $this->deleteImage($image);
         }
 
@@ -160,53 +177,23 @@ class AssetController extends Controller
 
     private function deleteImage(string $path): void
     {
+        if (! Asset::isPublicImagePath($path) || ! Storage::disk('public')->exists($path)) {
+            return;
+        }
+
         if (! Storage::disk('public')->delete($path)) {
             throw new RuntimeException('Foto aset gagal dihapus dari penyimpanan.');
         }
     }
 
-    private function convertImageToBase64(UploadedFile $file): string
+    private function storeImage(UploadedFile $file): string
     {
-        $mime = $file->getMimeType() ?: 'application/octet-stream';
-        $raw = file_get_contents($file->getRealPath());
+        $path = $file->store('assets', 'public');
 
-        if ($raw === false) {
-            throw new RuntimeException('Foto aset gagal dibaca. Silakan pilih ulang file foto.');
+        if (! is_string($path) || ! Asset::isPublicImagePath($path)) {
+            throw new RuntimeException('Foto aset gagal disimpan. Silakan coba kembali.');
         }
 
-        if (function_exists('imagecreatefromstring')) {
-            $image = @imagecreatefromstring($raw);
-
-            if ($image !== false) {
-                $width = imagesx($image);
-                $height = imagesy($image);
-
-                if ($width > 800) {
-                    $newHeight = max(1, (int) round(($height / $width) * 800));
-                    $resizedImage = imagescale($image, 800, $newHeight);
-                    imagedestroy($image);
-
-                    if ($resizedImage === false) {
-                        throw new RuntimeException('Foto aset gagal diproses. Silakan coba file foto lain.');
-                    }
-
-                    $image = $resizedImage;
-                }
-
-                ob_start();
-                $encodedSuccessfully = imagejpeg($image, null, 75);
-                $compressedImage = ob_get_clean();
-                imagedestroy($image);
-
-                if (! $encodedSuccessfully || $compressedImage === false) {
-                    throw new RuntimeException('Foto aset gagal dikompresi. Silakan coba kembali.');
-                }
-
-                $raw = $compressedImage;
-                $mime = 'image/jpeg';
-            }
-        }
-
-        return 'data:'.$mime.';base64,'.base64_encode($raw);
+        return $path;
     }
 }

@@ -7,10 +7,48 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BorrowingController;
 use App\Http\Controllers\CatalogController;
 use App\Http\Controllers\DashboardController;
+use App\Models\Asset;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\StreamedResponse;
+
+Route::get('/storage-file/{path}', function (string $path): StreamedResponse {
+    abort_unless(Asset::isPublicImagePath($path), 404);
+
+    $disk = Storage::disk('public');
+    abort_unless($disk->exists($path), 404);
+
+    $mimeType = $disk->mimeType($path);
+    abort_unless(in_array($mimeType, [
+        'image/jpeg',
+        'image/png',
+        'image/webp',
+        'image/gif',
+        'image/avif',
+    ], true), 404);
+
+    $publicDirectory = realpath($disk->path(''));
+    $assetsDirectory = realpath($disk->path('assets'));
+    $realFilePath = realpath($disk->path($path));
+    abort_unless(
+        $publicDirectory !== false
+            && $assetsDirectory !== false
+            && $realFilePath !== false
+            && str_starts_with($realFilePath, $publicDirectory.DIRECTORY_SEPARATOR)
+            && str_starts_with($realFilePath, $assetsDirectory.DIRECTORY_SEPARATOR)
+            && is_file($realFilePath),
+        404,
+    );
+
+    return $disk->response($path, basename($path), [
+        'Content-Type' => $mimeType,
+        'Cache-Control' => 'public, max-age=86400',
+        'X-Content-Type-Options' => 'nosniff',
+    ]);
+})->where('path', '.*')->name('storage-file.show');
 
 Route::get('/', function (Request $request): View|RedirectResponse {
     if ($request->user() !== null) {
