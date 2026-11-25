@@ -9,6 +9,12 @@
             <button type="button" onclick="window.print()" class="inline-flex items-center justify-center gap-2 rounded-xl bg-take-olive px-5 py-3 text-sm font-bold text-white transition hover:bg-[#294231]">Cetak kartu <span aria-hidden="true">⎙</span></button>
         </div>
 
+        @if (! request()->routeIs('admin.borrowings.receipt') && $borrowing->status === 'pending')
+            <div class="no-print mb-5 max-w-sm">
+                <x-whatsapp-action :borrowing="$borrowing" type="new_request" label="Kirim ringkasan ke pengurus via WhatsApp" />
+            </div>
+        @endif
+
         <article class="print-card overflow-hidden rounded-3xl border border-take-line bg-white shadow-sm">
             <div class="bg-take-olive px-6 py-7 text-white sm:px-9">
                 <div class="flex items-start justify-between gap-4">

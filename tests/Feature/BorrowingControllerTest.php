@@ -182,6 +182,18 @@ class BorrowingControllerTest extends TestCase
             ->assertSee('Cetak kartu');
     }
 
+    public function test_owner_can_open_whatsapp_action_from_pending_borrowing_receipt(): void
+    {
+        $user = User::factory()->create(['role' => 'warga']);
+        $asset = $this->createAsset();
+        $borrowing = $this->createBorrowing($user, $asset, 'TAKE-20261123-105', 'pending');
+
+        $this->actingAs($user)
+            ->get(route('my-borrowings.receipt', $borrowing))
+            ->assertOk()
+            ->assertSee('Kirim ringkasan ke pengurus via WhatsApp');
+    }
+
     public function test_user_cannot_open_another_users_receipt(): void
     {
         $owner = User::factory()->create(['role' => 'warga']);

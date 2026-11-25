@@ -62,6 +62,11 @@
                         @if ($borrowing->admin_note)
                             <p class="mt-4 rounded-xl bg-take-cream/70 px-4 py-3 text-sm text-stone-600"><span class="font-bold">Catatan admin:</span> {{ $borrowing->admin_note }}</p>
                         @endif
+                        @if ($borrowing->status === 'pending')
+                            <div class="mt-4 max-w-sm">
+                                <x-whatsapp-action :borrowing="$borrowing" type="new_request" label="Kirim ringkasan ke pengurus via WhatsApp" />
+                            </div>
+                        @endif
                     </article>
                 @endforeach
             </div>

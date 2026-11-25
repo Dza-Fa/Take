@@ -104,6 +104,14 @@
                                 <div class="flex shrink-0 flex-col gap-3 xl:w-72">
                                     <a href="{{ route('admin.borrowings.receipt', $borrowing) }}" class="inline-flex items-center justify-center rounded-xl border border-take-line px-4 py-2.5 text-sm font-bold text-take-olive transition hover:border-take-olive hover:bg-take-cream/50">Kartu bukti pinjam</a>
 
+                                    @if (in_array($borrowing->status, ['approved', 'borrowed', 'rejected'], true))
+                                        <x-whatsapp-action :borrowing="$borrowing" type="status" label="Kirim konfirmasi status via WhatsApp" />
+                                    @endif
+
+                                    @if (in_array($borrowing->status, ['approved', 'borrowed'], true))
+                                        <x-whatsapp-action :borrowing="$borrowing" type="reminder" :label="$borrowing->isOverdue() ? 'Kirim peringatan terlambat' : 'Kirim pengingat pengembalian'" />
+                                    @endif
+
                                     @if ($borrowing->status === 'pending')
                                         <form method="POST" action="{{ route('admin.borrowings.approve', $borrowing) }}" @submit.prevent="$dispatch('confirm-action', { form: $el, title: 'Setujui dan serahkan barang?', message: 'Persetujuan akan langsung mengurangi stok tersedia dan mengubah status transaksi menjadi sedang dipinjam.' })">
                                             @csrf
