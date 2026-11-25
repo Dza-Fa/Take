@@ -14,7 +14,10 @@ class AuthControllerTest extends TestCase
     {
         $this->get(route('login'))
             ->assertOk()
-            ->assertSee('Masuk ke Take');
+            ->assertSee('Masuk ke Take')
+            ->assertSee('width="24" height="24"', false)
+            ->assertSee('class="size-6"', false)
+            ->assertSee('rounded-none', false);
 
         $this->get(route('register'))
             ->assertOk()
