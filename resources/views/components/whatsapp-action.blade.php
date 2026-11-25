@@ -63,7 +63,7 @@
         type="button"
         @click="sendMessage()"
         :disabled="busy"
-        class="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-emerald-200 px-4 py-2.5 text-sm font-bold text-emerald-800 transition hover:bg-emerald-50 disabled:cursor-wait disabled:opacity-60"
+        class="inline-flex w-full items-center justify-center gap-2 rounded-none border border-emerald-200 px-4 py-2.5 text-sm font-bold text-emerald-800 transition hover:bg-emerald-50 disabled:cursor-wait disabled:opacity-60"
     >
         <span x-show="! busy">{{ $label }}</span>
         <span x-cloak x-show="busy">Menyiapkan WhatsApp…</span>

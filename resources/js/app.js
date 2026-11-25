@@ -13,7 +13,7 @@ if (dashboardCharts) {
                 datasets: [{
                     data: dashboardCharts.topAssets.values,
                     backgroundColor: '#75835a',
-                    borderRadius: 8,
+                    borderRadius: 0,
                     maxBarThickness: 30,
                 }],
             },

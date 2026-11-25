@@ -18,7 +18,7 @@
         <header class="sticky top-0 z-30 border-b border-take-line bg-take-cream/95 backdrop-blur" x-data="{ menuOpen: false }">
             <nav class="mx-auto flex max-w-7xl items-center justify-between gap-5 px-4 py-4 sm:px-6 lg:px-8" aria-label="Navigasi utama">
                 <a href="{{ route('dashboard') }}" class="flex shrink-0 items-center gap-3" aria-label="Take, beranda">
-                    <span class="grid size-10 place-items-center rounded-2xl bg-take-olive text-white">
+                    <span class="grid size-10 place-items-center rounded-none bg-take-olive text-white">
                         <x-take-mark class="size-6" />
                     </span>
                     <span>
@@ -30,38 +30,38 @@
                 <div class="hidden items-center gap-2 md:flex">
                     @if (auth()->user()->isAdmin())
                         <a href="{{ route('dashboard') }}" @class([
-                            'rounded-full px-4 py-2 text-sm font-semibold transition',
+                            'rounded-none px-4 py-2 text-sm font-semibold transition',
                             'bg-white text-take-olive shadow-sm' => request()->routeIs('dashboard'),
                             'text-stone-600 hover:bg-white/70 hover:text-take-ink' => ! request()->routeIs('dashboard'),
                         ])>Dashboard</a>
                         <a href="{{ route('admin.assets.index') }}" @class([
-                            'rounded-full px-4 py-2 text-sm font-semibold transition',
+                            'rounded-none px-4 py-2 text-sm font-semibold transition',
                             'bg-white text-take-olive shadow-sm' => request()->routeIs('admin.assets.*'),
                             'text-stone-600 hover:bg-white/70 hover:text-take-ink' => ! request()->routeIs('admin.assets.*'),
                         ])>Aset</a>
                         <a href="{{ route('admin.categories.index') }}" @class([
-                            'rounded-full px-4 py-2 text-sm font-semibold transition',
+                            'rounded-none px-4 py-2 text-sm font-semibold transition',
                             'bg-white text-take-olive shadow-sm' => request()->routeIs('admin.categories.*'),
                             'text-stone-600 hover:bg-white/70 hover:text-take-ink' => ! request()->routeIs('admin.categories.*'),
                         ])>Kategori</a>
                         <a href="{{ route('admin.borrowings.index') }}" @class([
-                            'rounded-full px-4 py-2 text-sm font-semibold transition',
+                            'rounded-none px-4 py-2 text-sm font-semibold transition',
                             'bg-white text-take-olive shadow-sm' => request()->routeIs('admin.borrowings.*'),
                             'text-stone-600 hover:bg-white/70 hover:text-take-ink' => ! request()->routeIs('admin.borrowings.*'),
                         ])>Peminjaman</a>
                     @else
                         <a href="{{ route('dashboard') }}" @class([
-                            'rounded-full px-4 py-2 text-sm font-semibold transition',
+                            'rounded-none px-4 py-2 text-sm font-semibold transition',
                             'bg-white text-take-olive shadow-sm' => request()->routeIs('dashboard'),
                             'text-stone-600 hover:bg-white/70 hover:text-take-ink' => ! request()->routeIs('dashboard'),
                         ])>Beranda</a>
                         <a href="{{ route('catalog.index') }}" @class([
-                            'rounded-full px-4 py-2 text-sm font-semibold transition',
+                            'rounded-none px-4 py-2 text-sm font-semibold transition',
                             'bg-white text-take-olive shadow-sm' => request()->routeIs('catalog.*'),
                             'text-stone-600 hover:bg-white/70 hover:text-take-ink' => ! request()->routeIs('catalog.*'),
                         ])>Katalog aset</a>
                         <a href="{{ route('my-borrowings.index') }}" @class([
-                            'rounded-full px-4 py-2 text-sm font-semibold transition',
+                            'rounded-none px-4 py-2 text-sm font-semibold transition',
                             'bg-white text-take-olive shadow-sm' => request()->routeIs('my-borrowings.*'),
                             'text-stone-600 hover:bg-white/70 hover:text-take-ink' => ! request()->routeIs('my-borrowings.*'),
                         ])>Pinjaman saya</a>
@@ -72,13 +72,13 @@
                     <span class="text-sm font-medium text-stone-600">{{ auth()->user()->name }}</span>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
-                        <button type="submit" class="rounded-full border border-take-line px-4 py-2 text-sm font-semibold text-stone-700 transition hover:border-take-olive hover:text-take-olive">
+                        <button type="submit" class="rounded-none border border-take-line px-4 py-2 text-sm font-semibold text-stone-700 transition hover:border-take-olive hover:text-take-olive">
                             Keluar
                         </button>
                     </form>
                 </div>
 
-                <button type="button" class="grid size-10 place-items-center rounded-xl border border-take-line text-take-ink md:hidden" @click="menuOpen = ! menuOpen" :aria-expanded="menuOpen.toString()" aria-label="Buka navigasi">
+                <button type="button" class="grid size-10 place-items-center rounded-none border border-take-line text-take-ink md:hidden" @click="menuOpen = ! menuOpen" :aria-expanded="menuOpen.toString()" aria-label="Buka navigasi">
                     <svg x-show="! menuOpen" xmlns="http://www.w3.org/2000/svg" class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M4 12h16M4 17h16" />
                     </svg>
@@ -91,14 +91,14 @@
             <div x-cloak x-show="menuOpen" x-transition class="border-t border-take-line px-4 pb-4 md:hidden">
                 <div class="mx-auto flex max-w-7xl flex-col gap-2 pt-3">
                     @if (auth()->user()->isAdmin())
-                        <a href="{{ route('dashboard') }}" class="rounded-xl px-4 py-3 text-sm font-semibold text-stone-700 hover:bg-white">Dashboard pengurus</a>
-                        <a href="{{ route('admin.assets.index') }}" class="rounded-xl px-4 py-3 text-sm font-semibold text-stone-700 hover:bg-white">Kelola aset</a>
-                        <a href="{{ route('admin.categories.index') }}" class="rounded-xl px-4 py-3 text-sm font-semibold text-stone-700 hover:bg-white">Kelola kategori</a>
-                        <a href="{{ route('admin.borrowings.index') }}" class="rounded-xl px-4 py-3 text-sm font-semibold text-stone-700 hover:bg-white">Kelola peminjaman</a>
+                        <a href="{{ route('dashboard') }}" class="rounded-none px-4 py-3 text-sm font-semibold text-stone-700 hover:bg-white">Dashboard pengurus</a>
+                        <a href="{{ route('admin.assets.index') }}" class="rounded-none px-4 py-3 text-sm font-semibold text-stone-700 hover:bg-white">Kelola aset</a>
+                        <a href="{{ route('admin.categories.index') }}" class="rounded-none px-4 py-3 text-sm font-semibold text-stone-700 hover:bg-white">Kelola kategori</a>
+                        <a href="{{ route('admin.borrowings.index') }}" class="rounded-none px-4 py-3 text-sm font-semibold text-stone-700 hover:bg-white">Kelola peminjaman</a>
                     @else
-                        <a href="{{ route('dashboard') }}" class="rounded-xl px-4 py-3 text-sm font-semibold text-stone-700 hover:bg-white">Beranda warga</a>
-                        <a href="{{ route('catalog.index') }}" class="rounded-xl px-4 py-3 text-sm font-semibold text-stone-700 hover:bg-white">Katalog aset</a>
-                        <a href="{{ route('my-borrowings.index') }}" class="rounded-xl px-4 py-3 text-sm font-semibold text-stone-700 hover:bg-white">Pinjaman saya</a>
+                        <a href="{{ route('dashboard') }}" class="rounded-none px-4 py-3 text-sm font-semibold text-stone-700 hover:bg-white">Beranda warga</a>
+                        <a href="{{ route('catalog.index') }}" class="rounded-none px-4 py-3 text-sm font-semibold text-stone-700 hover:bg-white">Katalog aset</a>
+                        <a href="{{ route('my-borrowings.index') }}" class="rounded-none px-4 py-3 text-sm font-semibold text-stone-700 hover:bg-white">Pinjaman saya</a>
                     @endif
                     <div class="mt-2 flex items-center justify-between border-t border-take-line pt-4">
                         <span class="text-sm text-stone-600">{{ auth()->user()->name }}</span>
@@ -128,14 +128,14 @@
             aria-live="polite"
         >
             @if (session('success'))
-                <div class="flex items-start gap-3 rounded-2xl border border-emerald-200 bg-white p-4 text-emerald-900 shadow-xl shadow-emerald-950/10">
-                    <span class="grid size-8 shrink-0 place-items-center rounded-full bg-emerald-100 text-emerald-700" aria-hidden="true">✓</span>
+                <div class="flex items-start gap-3 rounded-none border border-emerald-200 bg-white p-4 text-emerald-900 shadow-xl shadow-emerald-950/10">
+                    <span class="grid size-8 shrink-0 place-items-center rounded-none bg-emerald-100 text-emerald-700" aria-hidden="true">✓</span>
                     <p class="flex-1 pt-1 text-sm font-medium">{{ session('success') }}</p>
                     <button type="button" class="text-emerald-700" @click="visible = false" aria-label="Tutup notifikasi">×</button>
                 </div>
             @else
-                <div class="flex items-start gap-3 rounded-2xl border border-rose-200 bg-white p-4 text-rose-900 shadow-xl shadow-rose-950/10">
-                    <span class="grid size-8 shrink-0 place-items-center rounded-full bg-rose-100 text-rose-700" aria-hidden="true">!</span>
+                <div class="flex items-start gap-3 rounded-none border border-rose-200 bg-white p-4 text-rose-900 shadow-xl shadow-rose-950/10">
+                    <span class="grid size-8 shrink-0 place-items-center rounded-none bg-rose-100 text-rose-700" aria-hidden="true">!</span>
                     <p class="flex-1 pt-1 text-sm font-medium">{{ session('error') }}</p>
                     <button type="button" class="text-rose-700" @click="visible = false" aria-label="Tutup notifikasi">×</button>
                 </div>
@@ -152,19 +152,19 @@
             x-transition:leave="transition ease-in duration-150"
             x-transition:leave-start="translate-y-0 scale-100 opacity-100"
             x-transition:leave-end="translate-y-2 scale-95 opacity-0"
-            class="w-full max-w-md rounded-3xl bg-white p-6 shadow-2xl"
+            class="w-full max-w-md rounded-none bg-white p-6 shadow-2xl"
             role="dialog"
             aria-modal="true"
             aria-labelledby="confirm-action-title"
             aria-describedby="confirm-action-message"
             @click.stop
         >
-            <span class="grid size-12 place-items-center rounded-2xl bg-amber-50 text-xl text-amber-700" aria-hidden="true">!</span>
+            <span class="grid size-12 place-items-center rounded-none bg-amber-50 text-xl text-amber-700" aria-hidden="true">!</span>
             <h2 id="confirm-action-title" class="mt-4 text-xl font-semibold text-take-ink" x-text="title"></h2>
             <p id="confirm-action-message" class="mt-2 text-sm leading-6 text-stone-600" x-text="message"></p>
             <div class="mt-6 flex justify-end gap-3">
-                <button type="button" class="rounded-xl border border-stone-200 px-4 py-2.5 text-sm font-bold text-stone-600 transition hover:bg-stone-50" @click="open = false">Batal</button>
-                <button type="button" class="rounded-xl bg-take-olive px-4 py-2.5 text-sm font-bold text-white transition hover:bg-[#294231]" @click="form.submit(); open = false">Ya, lanjutkan</button>
+                <button type="button" class="rounded-none border border-stone-200 px-4 py-2.5 text-sm font-bold text-stone-600 transition hover:bg-stone-50" @click="open = false">Batal</button>
+                <button type="button" class="rounded-none bg-take-olive px-4 py-2.5 text-sm font-bold text-white transition hover:bg-[#294231]" @click="form.submit(); open = false">Ya, lanjutkan</button>
             </div>
         </section>
     </div>

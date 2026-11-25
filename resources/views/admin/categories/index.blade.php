@@ -10,12 +10,12 @@
                 <h1 class="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">Kategori aset</h1>
                 <p class="mt-2 text-sm text-stone-500">Kelompokkan perlengkapan agar mudah ditemukan dan dirawat.</p>
             </div>
-            <a href="{{ route('admin.categories.create') }}" class="inline-flex items-center justify-center gap-2 rounded-xl bg-take-olive px-5 py-3 text-sm font-bold text-white shadow-lg shadow-take-olive/10 transition hover:bg-[#294231]">
+            <a href="{{ route('admin.categories.create') }}" class="inline-flex items-center justify-center gap-2 rounded-none bg-take-olive px-5 py-3 text-sm font-bold text-white shadow-lg shadow-take-olive/10 transition hover:bg-[#294231]">
                 <span class="text-lg leading-none">+</span> Tambah kategori
             </a>
         </div>
 
-        <div class="mt-8 overflow-hidden rounded-3xl border border-take-line bg-white shadow-sm">
+        <div class="mt-8 overflow-hidden rounded-none border border-take-line bg-white shadow-sm">
             @if ($categories->isNotEmpty())
                 <div class="overflow-x-auto">
                     <table class="w-full min-w-[640px] text-left">
@@ -37,15 +37,15 @@
                                     </td>
                                     <td class="px-6 py-4 text-sm text-stone-500">{{ $category->slug }}</td>
                                     <td class="px-6 py-4">
-                                        <span class="rounded-full bg-take-cream px-3 py-1 text-xs font-bold text-take-olive">{{ $category->assets_count }} aset</span>
+                                        <span class="rounded-none bg-take-cream px-3 py-1 text-xs font-bold text-take-olive">{{ $category->assets_count }} aset</span>
                                     </td>
                                     <td class="px-6 py-4">
                                         <div class="flex justify-end gap-2">
-                                            <a href="{{ route('admin.categories.edit', $category) }}" class="rounded-lg px-3 py-2 text-xs font-bold text-take-olive hover:bg-take-cream">Edit</a>
+                                            <a href="{{ route('admin.categories.edit', $category) }}" class="rounded-none px-3 py-2 text-xs font-bold text-take-olive hover:bg-take-cream">Edit</a>
                                             <form method="POST" action="{{ route('admin.categories.destroy', $category) }}" @submit.prevent="$dispatch('confirm-action', { form: $el, title: 'Hapus kategori?', message: 'Kategori yang masih memiliki aset tetap tidak dapat dihapus.' })">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="rounded-lg px-3 py-2 text-xs font-bold text-rose-700 hover:bg-rose-50">Hapus</button>
+                                                <button type="submit" class="rounded-none px-3 py-2 text-xs font-bold text-rose-700 hover:bg-rose-50">Hapus</button>
                                             </form>
                                         </div>
                                     </td>
@@ -59,10 +59,10 @@
                 @endif
             @else
                 <div class="px-6 py-16 text-center">
-                    <div class="mx-auto grid size-16 place-items-center rounded-2xl bg-take-cream text-3xl text-take-olive" aria-hidden="true">▦</div>
+                    <div class="mx-auto grid size-16 place-items-center rounded-none bg-take-cream text-3xl text-take-olive" aria-hidden="true">▦</div>
                     <h2 class="mt-5 text-lg font-semibold">Belum ada kategori</h2>
                     <p class="mx-auto mt-2 max-w-sm text-sm leading-6 text-stone-500">Mulai dengan membuat kategori pertama, misalnya perlengkapan acara atau alat kerja bakti.</p>
-                    <a href="{{ route('admin.categories.create') }}" class="mt-6 inline-flex rounded-xl bg-take-olive px-5 py-3 text-sm font-bold text-white hover:bg-[#294231]">Buat kategori pertama</a>
+                    <a href="{{ route('admin.categories.create') }}" class="mt-6 inline-flex rounded-none bg-take-olive px-5 py-3 text-sm font-bold text-white hover:bg-[#294231]">Buat kategori pertama</a>
                 </div>
             @endif
         </div>

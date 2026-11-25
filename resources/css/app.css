@@ -17,6 +17,12 @@
     display: none !important;
 }
 
+nav[role="navigation"] .rounded-md,
+nav[role="navigation"] .rounded-l-md,
+nav[role="navigation"] .rounded-r-md {
+    border-radius: 0px;
+}
+
 @media print {
     @page {
         margin: 14mm;

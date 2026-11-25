@@ -10,25 +10,25 @@
                 <h1 class="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">Pinjaman saya</h1>
                 <p class="mt-2 text-sm text-stone-500">Pantau pengajuan, jadwal kembali, dan bukti pinjam digital.</p>
             </div>
-            <a href="{{ route('catalog.index') }}" class="inline-flex items-center justify-center gap-2 self-start rounded-xl bg-take-olive px-5 py-3 text-sm font-bold text-white transition hover:bg-[#294231] sm:self-auto">Cari aset lain <span aria-hidden="true">→</span></a>
+            <a href="{{ route('catalog.index') }}" class="inline-flex items-center justify-center gap-2 self-start rounded-none bg-take-olive px-5 py-3 text-sm font-bold text-white transition hover:bg-[#294231] sm:self-auto">Cari aset lain <span aria-hidden="true">→</span></a>
         </div>
 
         @if ($borrowings->isNotEmpty())
             <div class="mt-7 space-y-4">
                 @foreach ($borrowings as $borrowing)
-                    <article class="rounded-3xl border border-take-line bg-white p-5 shadow-sm sm:p-6">
+                    <article class="rounded-none border border-take-line bg-white p-5 shadow-sm sm:p-6">
                         <div class="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
                             <div class="flex min-w-0 items-start gap-4">
                                 @if ($borrowing->asset->imageUrl())
-                                    <img src="{{ $borrowing->asset->imageUrl() }}" alt="Foto {{ $borrowing->asset->name }}" class="size-16 shrink-0 rounded-2xl border border-stone-100 object-cover">
+                                    <img src="{{ $borrowing->asset->imageUrl() }}" alt="Foto {{ $borrowing->asset->name }}" class="size-16 shrink-0 rounded-none border border-stone-100 object-cover">
                                 @else
-                                    <span class="grid size-16 shrink-0 place-items-center rounded-2xl bg-take-cream text-2xl text-take-olive" aria-hidden="true">▧</span>
+                                    <span class="grid size-16 shrink-0 place-items-center rounded-none bg-take-cream text-2xl text-take-olive" aria-hidden="true">▧</span>
                                 @endif
                                 <div class="min-w-0">
                                     <div class="flex flex-wrap items-center gap-2">
                                         <h2 class="text-lg font-semibold">{{ $borrowing->asset->name }}</h2>
                                         <span @class([
-                                            'rounded-full px-3 py-1 text-xs font-bold',
+                                            'rounded-none px-3 py-1 text-xs font-bold',
                                             'bg-amber-50 text-amber-800' => $borrowing->status === 'pending',
                                             'bg-sky-50 text-sky-800' => $borrowing->status === 'approved',
                                             'bg-indigo-50 text-indigo-800' => $borrowing->status === 'borrowed',
@@ -42,14 +42,14 @@
                                             'rejected' => 'Ditolak',
                                         ][$borrowing->status] }}</span>
                                         @if ($borrowing->isOverdue())
-                                            <span class="rounded-full bg-rose-100 px-3 py-1 text-xs font-bold text-rose-800">Terlambat dikembalikan</span>
+                                            <span class="rounded-none bg-rose-100 px-3 py-1 text-xs font-bold text-rose-800">Terlambat dikembalikan</span>
                                         @endif
                                     </div>
                                     <p class="mt-1 text-xs font-semibold tracking-wide text-stone-400">{{ $borrowing->booking_code }} · {{ $borrowing->asset->category->name }}</p>
                                     <p class="mt-3 text-sm text-stone-600">{{ $borrowing->purpose }}</p>
                                 </div>
                             </div>
-                            <a href="{{ route('my-borrowings.receipt', $borrowing) }}" class="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl border border-take-line px-4 py-2.5 text-sm font-bold text-take-olive transition hover:border-take-olive hover:bg-take-cream/50">
+                            <a href="{{ route('my-borrowings.receipt', $borrowing) }}" class="inline-flex shrink-0 items-center justify-center gap-2 rounded-none border border-take-line px-4 py-2.5 text-sm font-bold text-take-olive transition hover:border-take-olive hover:bg-take-cream/50">
                                 Kartu bukti pinjam <span aria-hidden="true">↗</span>
                             </a>
                         </div>
@@ -60,7 +60,7 @@
                             <div><span class="block text-xs font-semibold uppercase tracking-wide text-stone-400">Tanggal kembali</span><span class="mt-1 block font-semibold text-stone-700">{{ $borrowing->return_date->format('d/m/Y') }}</span></div>
                         </div>
                         @if ($borrowing->admin_note)
-                            <p class="mt-4 rounded-xl bg-take-cream/70 px-4 py-3 text-sm text-stone-600"><span class="font-bold">Catatan admin:</span> {{ $borrowing->admin_note }}</p>
+                            <p class="mt-4 rounded-none bg-take-cream/70 px-4 py-3 text-sm text-stone-600"><span class="font-bold">Catatan admin:</span> {{ $borrowing->admin_note }}</p>
                         @endif
                         @if ($borrowing->status === 'pending')
                             <div class="mt-4 max-w-sm">
@@ -75,11 +75,11 @@
                 <div class="mt-6">{{ $borrowings->links() }}</div>
             @endif
         @else
-            <div class="mt-7 rounded-3xl border border-dashed border-take-line bg-white px-6 py-16 text-center">
-                <div class="mx-auto grid size-16 place-items-center rounded-2xl bg-take-cream text-3xl text-take-olive" aria-hidden="true">↗</div>
+            <div class="mt-7 rounded-none border border-dashed border-take-line bg-white px-6 py-16 text-center">
+                <div class="mx-auto grid size-16 place-items-center rounded-none bg-take-cream text-3xl text-take-olive" aria-hidden="true">↗</div>
                 <h2 class="mt-5 text-lg font-semibold">Belum ada pinjaman</h2>
                 <p class="mx-auto mt-2 max-w-sm text-sm leading-6 text-stone-500">Saat kamu mengajukan aset untuk kegiatan warga, status dan jadwalnya akan muncul di halaman ini.</p>
-                <a href="{{ route('catalog.index') }}" class="mt-6 inline-flex rounded-xl bg-take-olive px-5 py-3 text-sm font-bold text-white hover:bg-[#294231]">Jelajahi katalog</a>
+                <a href="{{ route('catalog.index') }}" class="mt-6 inline-flex rounded-none bg-take-olive px-5 py-3 text-sm font-bold text-white hover:bg-[#294231]">Jelajahi katalog</a>
             </div>
         @endif
     </section>

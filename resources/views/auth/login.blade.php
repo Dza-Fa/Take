@@ -9,7 +9,7 @@
             <div class="absolute -right-8 -top-4 size-64 rounded-full border border-white/10"></div>
             <div class="absolute -bottom-36 -left-20 size-96 rounded-full bg-white/5"></div>
             <a href="{{ route('login') }}" class="relative inline-flex items-center gap-3">
-                <span class="grid size-11 place-items-center rounded-2xl bg-white text-take-olive">
+                <span class="grid size-11 place-items-center rounded-none bg-white text-take-olive">
                     <x-take-mark class="size-6" />
                 </span>
                 <span class="text-xl font-bold tracking-tight">Take</span>
@@ -19,7 +19,7 @@
                 <h1 class="text-5xl font-semibold leading-[1.08] tracking-tight xl:text-6xl">Berbagi lebih mudah, lingkungan lebih kuat.</h1>
                 <p class="mt-6 max-w-lg text-lg leading-8 text-white/75">Satu tempat untuk merawat, menemukan, dan menggunakan aset bersama warga.</p>
                 <div class="mt-10 flex items-center gap-3 text-sm text-white/80">
-                    <span class="grid size-9 place-items-center rounded-full bg-white/10">01</span>
+                    <span class="grid size-9 place-items-center rounded-none bg-white/10">01</span>
                     <span>Transparan untuk semua warga</span>
                 </div>
             </div>
@@ -30,7 +30,7 @@
             <div class="w-full max-w-md">
                 <div class="mb-10 lg:hidden">
                     <a href="{{ route('login') }}" class="inline-flex items-center gap-3">
-                        <span class="grid size-11 place-items-center rounded-2xl bg-take-olive text-white">
+                        <span class="grid size-11 place-items-center rounded-none bg-take-olive text-white">
                             <x-take-mark class="size-6" />
                         </span>
                         <span class="text-xl font-bold tracking-tight">Take</span>
@@ -44,7 +44,7 @@
                     @csrf
                     <div>
                         <label for="email" class="mb-2 block text-sm font-semibold text-stone-700">Email</label>
-                        <input id="email" name="email" type="email" value="{{ old('email') }}" required autofocus autocomplete="email" class="w-full rounded-xl border border-stone-200 bg-take-cream/50 px-4 py-3 text-sm outline-none transition placeholder:text-stone-400 focus:border-take-olive focus:ring-4 focus:ring-take-olive/10" placeholder="nama@email.com">
+                        <input id="email" name="email" type="email" value="{{ old('email') }}" required autofocus autocomplete="email" class="w-full rounded-none border border-stone-200 bg-take-cream/50 px-4 py-3 text-sm outline-none transition placeholder:text-stone-400 focus:border-take-olive focus:ring-4 focus:ring-take-olive/10" placeholder="nama@email.com">
                         @error('email')
                             <p class="mt-2 text-sm text-rose-700">{{ $message }}</p>
                         @enderror
@@ -53,16 +53,16 @@
                         <div class="mb-2 flex items-center justify-between">
                             <label for="password" class="block text-sm font-semibold text-stone-700">Kata sandi</label>
                         </div>
-                        <input id="password" name="password" type="password" required autocomplete="current-password" class="w-full rounded-xl border border-stone-200 bg-take-cream/50 px-4 py-3 text-sm outline-none transition placeholder:text-stone-400 focus:border-take-olive focus:ring-4 focus:ring-take-olive/10" placeholder="Masukkan kata sandi">
+                        <input id="password" name="password" type="password" required autocomplete="current-password" class="w-full rounded-none border border-stone-200 bg-take-cream/50 px-4 py-3 text-sm outline-none transition placeholder:text-stone-400 focus:border-take-olive focus:ring-4 focus:ring-take-olive/10" placeholder="Masukkan kata sandi">
                         @error('password')
                             <p class="mt-2 text-sm text-rose-700">{{ $message }}</p>
                         @enderror
                     </div>
                     <label class="flex items-center gap-3 text-sm text-stone-600">
-                        <input type="checkbox" name="remember" value="1" class="size-4 rounded border-stone-300 accent-take-olive">
+                        <input type="checkbox" name="remember" value="1" class="size-4 rounded-none border-stone-300 accent-take-olive">
                         Ingat saya
                     </label>
-                    <button type="submit" class="flex w-full items-center justify-center gap-2 rounded-xl bg-take-olive px-5 py-3.5 text-sm font-bold text-white shadow-lg shadow-take-olive/15 transition hover:bg-[#294231] focus:outline-none focus:ring-4 focus:ring-take-olive/20">
+                    <button type="submit" class="flex w-full items-center justify-center gap-2 rounded-none bg-take-olive px-5 py-3.5 text-sm font-bold text-white shadow-lg shadow-take-olive/15 transition hover:bg-[#294231] focus:outline-none focus:ring-4 focus:ring-take-olive/20">
                         Masuk
                         <span aria-hidden="true">→</span>
                     </button>
