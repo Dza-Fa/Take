@@ -210,10 +210,12 @@
                     <template x-for="asset in assets" :key="asset.id">
                         <article class="overflow-hidden rounded-none border border-take-line bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg">
                             <template x-if="asset.image">
-                                <img :src="asset.image" :alt="'Foto ' + asset.name" class="h-52 w-full bg-stone-100 object-cover">
+                                <div class="aspect-[6/5] flex items-center justify-center p-2 overflow-hidden rounded-none bg-stone-100">
+                                    <img :src="asset.image" :alt="'Foto ' + asset.name" class="max-w-full max-h-full w-auto h-auto object-contain rounded-none">
+                                </div>
                             </template>
                             <template x-if="!asset.image">
-                                <div class="grid h-52 place-items-center bg-gradient-to-br from-take-cream to-[#eee7d8]" aria-label="Foto belum tersedia">
+                                <div class="aspect-[6/5] flex items-center justify-center overflow-hidden rounded-none bg-stone-100 p-2" aria-label="Foto belum tersedia">
                                     <div class="grid size-20 place-items-center rounded-none border border-white/80 bg-white/70 text-4xl text-take-olive shadow-sm" aria-hidden="true">▧</div>
                                 </div>
                             </template>
@@ -255,9 +257,11 @@
                 @foreach ($assets as $asset)
                     <article class="overflow-hidden rounded-none border border-take-line bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg">
                         @if ($asset->image_url)
-                            <img src="{{ $asset->image_url }}" alt="Foto {{ $asset->name }}" class="h-52 w-full rounded-none bg-stone-100 object-cover">
+                            <div class="aspect-[6/5] flex items-center justify-center p-2 overflow-hidden rounded-none bg-stone-100">
+                                <img src="{{ $asset->image_url }}" alt="Foto {{ $asset->name }}" class="max-w-full max-h-full w-auto h-auto object-contain rounded-none">
+                            </div>
                         @else
-                            <div class="grid h-52 place-items-center bg-gradient-to-br from-take-cream to-[#eee7d8]" aria-label="Foto belum tersedia">
+                            <div class="aspect-[6/5] flex items-center justify-center overflow-hidden rounded-none bg-stone-100 p-2" aria-label="Foto belum tersedia">
                                 <div class="grid size-20 place-items-center rounded-none border border-white/80 bg-white/70 text-4xl text-take-olive shadow-sm" aria-hidden="true">▧</div>
                             </div>
                         @endif

@@ -9,9 +9,11 @@
         <div class="mt-5 grid gap-6 lg:grid-cols-[1fr_0.85fr]">
             <article class="overflow-hidden rounded-none border border-take-line bg-white shadow-sm">
                 @if ($asset->image_url)
-                    <img src="{{ $asset->image_url }}" alt="Foto {{ $asset->name }}" class="max-h-[32rem] min-h-72 w-full rounded-none bg-stone-100 object-cover">
+                    <div class="aspect-[6/5] flex items-center justify-center overflow-hidden rounded-none bg-stone-100 p-2">
+                        <img src="{{ $asset->image_url }}" alt="Foto {{ $asset->name }}" class="max-w-full max-h-full w-auto h-auto object-contain rounded-none">
+                    </div>
                 @else
-                    <div class="grid min-h-72 place-items-center bg-gradient-to-br from-take-cream to-[#eee7d8]">
+                    <div class="aspect-[6/5] flex items-center justify-center overflow-hidden rounded-none bg-stone-100 p-2">
                         <div class="grid size-24 place-items-center rounded-none border border-white/80 bg-white/70 text-5xl text-take-olive shadow-sm" aria-hidden="true">▧</div>
                     </div>
                 @endif
